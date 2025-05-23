@@ -4,10 +4,7 @@ from flet import Container, border, alignment, Page
 import time
 from math import pi
 
-from utils.logger import get_logger
-
-
-log = get_logger()
+from utils.logger import logger
 
 
 class AnimatedBox(Container):
@@ -59,6 +56,6 @@ def animate_boxes(page: Page, red_box: AnimatedBox, blue_box: AnimatedBox,
             if counter > 9:
                 counter = 0
         except Exception as e:
-            log.error(f"Animation stopped: {e}")
+            logger.error(f"Animation stopped: {e}")
             break
     page.update()

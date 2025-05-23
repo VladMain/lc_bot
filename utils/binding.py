@@ -1,10 +1,9 @@
 import pygetwindow as pgw
 import time
+from utils.logger import logger
 
-from utils.logger import get_logger
 
 WINDOW = None
-logger = get_logger()
 
 
 def bind_window():

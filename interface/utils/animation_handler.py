@@ -1,9 +1,6 @@
 import threading
 from interface.models.animated_box import animate_boxes
-from utils.logger import get_logger
-
-
-log = get_logger()
+from utils.logger import logger
 
 
 class AnimationController:
@@ -23,17 +20,17 @@ class AnimationController:
 
     def switch_logo_animation(self, event):
         if not self.stop_animation_flag.is_set():
-            log.debug('Анимация выключена')
+            logger.debug('Анимация выключена')
             self.stop_animation_flag.set()
         else:
-            log.debug('Анимация включена')
+            logger.debug('Анимация включена')
             self.stop_animation_flag.clear()
             self.start_animation()
         self.recolor_boxes()
 
     def recolor_boxes(self):
         if self.red_box.border.bottom.color == '#bcbcbc':
-            log.debug('Красим лого в цветное')
+            logger.debug('Красим лого в цветное')
             self.red_box.border.bottom.color = '#e9665a'
             self.red_box.border.top.color = '#e9665a'
             self.red_box.border.left.color = '#e9665a'
@@ -45,7 +42,7 @@ class AnimationController:
             self.blue_box.border.right.color = '#7df6dd'
             self.blue_box.bgcolor = '#38761d'
         else:
-            log.debug('Красим лого в серый')
+            logger.debug('Красим лого в серый')
             self.red_box.border.bottom.color = '#bcbcbc'
             self.red_box.border.top.color = '#bcbcbc'
             self.red_box.border.left.color = '#bcbcbc'

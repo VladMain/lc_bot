@@ -1,15 +1,11 @@
-import threading
-import time
 import flet as ft
 from math import pi
 
 from interface.utils.animation_handler import AnimationController
 from interface.utils.theme_changer import theme_changed
 
-from interface.models.animated_box import AnimatedBox, animate_boxes
-from utils.logger import get_logger
-
-log = get_logger()
+from interface.models.animated_box import AnimatedBox
+from utils.logger import logger
 
 
 def main(page: ft.Page):
@@ -24,7 +20,6 @@ def main(page: ft.Page):
     page.window.min_height = 700
     page.padding = 10  # Уменьшаем внутренние отступы
     page.theme_mode = ft.ThemeMode.LIGHT
-
 
     # Функция для изменения вкладок
     def change_tab(e):
