@@ -13,7 +13,7 @@ def get_path(relative_path, directory=''):
 
 
 # TODO: change locateOnScreen on locateOnWindow and find a way to bind a window with exact title
-def find(image: str, min_search_time: float, confidence: float):
+def find(image: str, min_search_time: float = 0.1, confidence: float = 0.7):
     image_name = image.split("/")[-1]
     logger.debug(f'Find {image_name} with minimal search time = {min_search_time} and confidence = {confidence}')
     result = None

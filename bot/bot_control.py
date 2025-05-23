@@ -1,10 +1,11 @@
 import time
 import pyautogui
 from bot.actions.find import get_path, find
+from bot.scenarios.feed_pet import feed_pet
 from utils.logger import logger
 
 
-def run_bot(e):
+def run_bot(e, window):
 
     drake_rawr_emotion = get_path('rawr_emotion.png', directory='pets\p1\drake')
     cycle = 0
@@ -15,4 +16,5 @@ def run_bot(e):
             logger.debug(f'Found image: {drake_rawr_emotion}')
             pyautogui.hotkey('I')
         time.sleep(2)
+        feed_pet(window)
         cycle += 1

@@ -7,7 +7,7 @@ from interface.utils.animation_handler import AnimationController
 from interface.utils.theme_changer import theme_changed
 
 from interface.models.animated_box import AnimatedBox
-from utils.binding import bind_window, WINDOW
+from utils.binding import bind_window
 from utils.logger import logger
 
 
