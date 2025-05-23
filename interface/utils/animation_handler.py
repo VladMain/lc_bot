@@ -20,17 +20,16 @@ class AnimationController:
 
     def switch_logo_animation(self, event):
         if not self.stop_animation_flag.is_set():
-            logger.debug('Анимация выключена')
+            logger.debug('Лого ВЫКЛ')
             self.stop_animation_flag.set()
         else:
-            logger.debug('Анимация включена')
+            logger.debug('Лого ВКЛ')
             self.stop_animation_flag.clear()
             self.start_animation()
         self.recolor_boxes()
 
     def recolor_boxes(self):
         if self.red_box.border.bottom.color == '#bcbcbc':
-            logger.debug('Красим лого в цветное')
             self.red_box.border.bottom.color = '#e9665a'
             self.red_box.border.top.color = '#e9665a'
             self.red_box.border.left.color = '#e9665a'
@@ -42,7 +41,6 @@ class AnimationController:
             self.blue_box.border.right.color = '#7df6dd'
             self.blue_box.bgcolor = '#38761d'
         else:
-            logger.debug('Красим лого в серый')
             self.red_box.border.bottom.color = '#bcbcbc'
             self.red_box.border.top.color = '#bcbcbc'
             self.red_box.border.left.color = '#bcbcbc'

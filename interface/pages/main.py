@@ -5,6 +5,7 @@ from interface.utils.animation_handler import AnimationController
 from interface.utils.theme_changer import theme_changed
 
 from interface.models.animated_box import AnimatedBox
+from utils.binding import bind_window, WINDOW
 from utils.logger import logger
 
 
@@ -20,6 +21,14 @@ def main(page: ft.Page):
     page.window.min_height = 700
     page.padding = 10  # Уменьшаем внутренние отступы
     page.theme_mode = ft.ThemeMode.LIGHT
+
+    binded_window_title = ft.Text(
+        "Нет привязанного окна",
+        size=14,
+        color=ft.Colors.BLACK,
+        weight="bold",
+        italic=True
+    )
 
     # Функция для изменения вкладок
     def change_tab(e):
@@ -58,10 +67,37 @@ def main(page: ft.Page):
         visible=False
     )
 
+    bind_button = ft.ElevatedButton(
+        "Привязать",
+        width=130,
+        height=30,
+        on_click=bind_window,
+        style=ft.ButtonStyle(
+            shape=ft.RoundedRectangleBorder(radius=5),
+            padding=10,
+            side=ft.BorderSide(1, ft.Colors.GREY_600)
+        )
+    )
+
     tab3_content = ft.Column(
         [
-            ft.Text("Содержимое третьей вкладки", size=20),
-            ft.Text("Это демонстрационное изображение")
+            ft.Text("Привязать окно:", size=20),
+            ft.Row(  # Используем Row для размещения элементов в одной строке
+                controls=[
+                    bind_button,
+                    ft.Container(  # Контейнер для красивого отображения текста
+                        content=binded_window_title,
+                        padding=ft.padding.only(left=20, right=20),
+                        border=ft.border.all(1, ft.Colors.GREY_600),
+                        border_radius=5,
+                        bgcolor=ft.Colors.GREY_100,
+                        height=30,
+                        alignment=ft.alignment.center
+                    )
+                ],
+                alignment=ft.MainAxisAlignment.START,
+                spacing=10
+            )
         ],
         visible=False
     )
@@ -104,4 +140,6 @@ def main(page: ft.Page):
         expand=True
     )
 
+    page.binded_window_title = binded_window_title
+    page.bind_button = bind_button
     page.add(main_content)
