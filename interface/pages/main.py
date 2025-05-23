@@ -1,6 +1,8 @@
 import flet as ft
 from math import pi
 
+from bot.actions.bot_state import change_bot_state
+from bot.bot_control import run_bot
 from interface.utils.animation_handler import AnimationController
 from interface.utils.theme_changer import theme_changed
 
@@ -52,8 +54,11 @@ def main(page: ft.Page):
     # Содержимое вкладок
     tab1_content = ft.Column(
         [
-            ft.Text("Содержимое первой вкладки", size=20),
-            ft.ElevatedButton("Кнопка 1", on_click=animation_controller.switch_logo_animation)
+            ft.Text("Бот", size=20),
+            ft.Switch("Включить бота",
+                      value=False,
+                      on_change=lambda e: change_bot_state(e, animation_controller)),
+            ft.ElevatedButton("Нажать 2")
         ],
         visible=True
     )

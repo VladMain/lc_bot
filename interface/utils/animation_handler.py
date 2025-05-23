@@ -18,7 +18,7 @@ class AnimationController:
             daemon=True
         ).start()
 
-    def switch_logo_animation(self, event):
+    def switch_logo_animation(self):
         if not self.stop_animation_flag.is_set():
             logger.debug('Лого ВЫКЛ')
             self.stop_animation_flag.set()
