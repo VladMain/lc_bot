@@ -8,6 +8,18 @@ from interface.models.animated_box import AnimatedBox, animate_boxes
 
 
 def main(page: ft.Page):
+
+    # Настройки страницы
+    page.title = "Last Chaos Bot"
+    page.window_always_on_top = True
+    page.window.width = 400
+    page.window.height = 700
+    page.window.always_on_top = True
+    page.window.min_width = 400  # Запрещаем изменение размера меньше минимального
+    page.window.min_height = 700
+    page.padding = 10  # Уменьшаем внутренние отступы
+    page.theme_mode = ft.ThemeMode.LIGHT
+
     # Флаг для управления анимацией
     animation_active = True
 
@@ -16,11 +28,6 @@ def main(page: ft.Page):
         if e.data == "close":
             animation_active = False
 
-    # Настройки страницы
-    page.title = "Last Chaos Bot"
-    page.window_width = 150
-    page.window_height = 200
-    page.padding = 20
     page.on_window_event = on_window_event
 
     # Функция для изменения вкладок
@@ -75,7 +82,6 @@ def main(page: ft.Page):
         expand=1,
     )
 
-    page.theme_mode = ft.ThemeMode.LIGHT
     switch = ft.Switch(label="Light theme", on_change=theme_changed)
 
     # Добавляем элементы на страницу
