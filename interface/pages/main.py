@@ -1,41 +1,40 @@
 import threading
-
+import time
 import flet as ft
-
 from math import pi
+from interface.utils.theme_changer import theme_changed
+
 from interface.models.animated_box import AnimatedBox, animate_boxes
 
 
 def main(page: ft.Page):
+    # Флаг для управления анимацией
+    animation_active = True
+
+    def on_window_event(e):
+        nonlocal animation_active
+        if e.data == "close":
+            animation_active = False
+
     # Настройки страницы
-    page.title = "Приложение с вкладками"
-    page.window_width = 600
-    page.window_height = 400
+    page.title = "Last Chaos Bot"
+    page.window_width = 150
+    page.window_height = 200
     page.padding = 20
+    page.on_window_event = on_window_event
 
     # Функция для изменения вкладок
     def change_tab(e):
-        # Скрываем все вкладки
-        tab1_content.visible = False
-        tab2_content.visible = False
-        tab3_content.visible = False
-
-        # Показываем выбранную вкладку
-        if e.control.selected_index == 0:
-            tab1_content.visible = True
-        elif e.control.selected_index == 1:
-            tab2_content.visible = True
-        elif e.control.selected_index == 2:
-            tab3_content.visible = True
-
+        tab1_content.visible = e.control.selected_index == 0
+        tab2_content.visible = e.control.selected_index == 1
+        tab3_content.visible = e.control.selected_index == 2
         page.update()
 
-    animated_box = ft.Stack(
-        controls=[
-            AnimatedBox("#e9665a", None, 0),
-            AnimatedBox("#7df6dd", "#23262a", pi / 4)
-        ]
-    )
+    # Создаем анимированные боксы
+    red_box = AnimatedBox("#e9665a", None, 0)
+    blue_box = AnimatedBox("#7df6dd", "#23262a", pi / 4)
+
+    animated_box = ft.Stack(controls=[red_box, blue_box])
 
     # Содержимое вкладок
     tab1_content = ft.Column(
@@ -43,7 +42,7 @@ def main(page: ft.Page):
             ft.Text("Содержимое первой вкладки", size=20),
             ft.ElevatedButton("Кнопка 1", on_click=lambda e: print("Кнопка 1 нажата"))
         ],
-        visible=True  # Первая вкладка видна по умолчанию
+        visible=True
     )
 
     tab2_content = ft.Column(
@@ -76,6 +75,9 @@ def main(page: ft.Page):
         expand=1,
     )
 
+    page.theme_mode = ft.ThemeMode.LIGHT
+    switch = ft.Switch(label="Light theme", on_change=theme_changed)
+
     # Добавляем элементы на страницу
     page.add(
         animated_box,
@@ -84,6 +86,12 @@ def main(page: ft.Page):
         tab1_content,
         tab2_content,
         tab3_content,
+        switch
     )
 
-    threading.Thread(target=animate_boxes, args=(page,)).start()
+    # Запускаем анимацию в потоке
+    threading.Thread(
+        target=animate_boxes,
+        args=(page, lambda: animation_active, red_box, blue_box),
+        daemon=True
+    ).start()
