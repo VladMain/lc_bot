@@ -61,3 +61,4 @@ def animate_boxes(page: Page, red_box: AnimatedBox, blue_box: AnimatedBox,
         except Exception as e:
             log.error(f"Animation stopped: {e}")
             break
+    page.update()

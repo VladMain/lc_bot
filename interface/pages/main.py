@@ -34,14 +34,13 @@ def main(page: ft.Page):
         page.update()
 
     # Создаем анимированные боксы
-    red_box = AnimatedBox("#e9665a", None, 0)
-    blue_box = AnimatedBox("#7df6dd", "#23262a", pi / 4)
+    red_box = AnimatedBox("#bcbcbc", None, 0)
+    blue_box = AnimatedBox("#bcbcbc", "#23262a", pi / 4)
 
     animation_controller = AnimationController(
         page=page,
         red_box=red_box,
-        blue_box=blue_box,
-        logger=log
+        blue_box=blue_box
     )
 
     animated_box = ft.Stack(controls=[red_box, blue_box])
