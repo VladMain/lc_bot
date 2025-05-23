@@ -2,9 +2,14 @@ import threading
 import time
 import flet as ft
 from math import pi
+
+from interface.utils.animation_handler import AnimationController
 from interface.utils.theme_changer import theme_changed
 
 from interface.models.animated_box import AnimatedBox, animate_boxes
+from utils.logger import get_logger
+
+log = get_logger()
 
 
 def main(page: ft.Page):
@@ -20,15 +25,6 @@ def main(page: ft.Page):
     page.padding = 10  # Уменьшаем внутренние отступы
     page.theme_mode = ft.ThemeMode.LIGHT
 
-    # Флаг для управления анимацией
-    animation_active = True
-
-    def on_window_event(e):
-        nonlocal animation_active
-        if e.data == "close":
-            animation_active = False
-
-    page.on_window_event = on_window_event
 
     # Функция для изменения вкладок
     def change_tab(e):
@@ -41,13 +37,20 @@ def main(page: ft.Page):
     red_box = AnimatedBox("#e9665a", None, 0)
     blue_box = AnimatedBox("#7df6dd", "#23262a", pi / 4)
 
+    animation_controller = AnimationController(
+        page=page,
+        red_box=red_box,
+        blue_box=blue_box,
+        logger=log
+    )
+
     animated_box = ft.Stack(controls=[red_box, blue_box])
 
     # Содержимое вкладок
     tab1_content = ft.Column(
         [
             ft.Text("Содержимое первой вкладки", size=20),
-            ft.ElevatedButton("Кнопка 1", on_click=lambda e: print("Кнопка 1 нажата"))
+            ft.ElevatedButton("Кнопка 1", on_click=animation_controller.switch_logo_animation)
         ],
         visible=True
     )
@@ -64,7 +67,6 @@ def main(page: ft.Page):
     tab3_content = ft.Column(
         [
             ft.Text("Содержимое третьей вкладки", size=20),
-            ft.Image(src="https://picsum.photos/200/300", width=200, height=150),
             ft.Text("Это демонстрационное изображение")
         ],
         visible=False
@@ -77,27 +79,35 @@ def main(page: ft.Page):
         tabs=[
             ft.Tab(text="Первая"),
             ft.Tab(text="Вторая"),
-            ft.Tab(text="Третья"),
+            ft.Tab(text="Настройки"),
         ],
-        expand=1,
+        expand=0,
     )
 
     switch = ft.Switch(label="Light theme", on_change=theme_changed)
 
-    # Добавляем элементы на страницу
-    page.add(
-        animated_box,
-        ft.Text("Приложение с вкладками", size=24, weight="bold"),
-        tabs,
-        tab1_content,
-        tab2_content,
-        tab3_content,
-        switch
+    main_content = ft.Column(
+        controls=[
+            animated_box,
+            ft.Text("Бот", size=24, weight="bold"),
+            tabs,
+            ft.Container(
+                content=ft.Column(
+                    controls=[tab1_content, tab2_content, tab3_content],
+                    scroll=ft.ScrollMode.AUTO,
+                    expand=True
+                ),
+                expand=True
+            ),
+            # Переключатель внизу с отступом сверху
+            ft.Divider(),
+            ft.Container(
+                content=switch,
+                padding=ft.padding.only(top=10),
+                alignment=ft.alignment.center
+            )
+        ],
+        expand=True
     )
 
-    # Запускаем анимацию в потоке
-    threading.Thread(
-        target=animate_boxes,
-        args=(page, lambda: animation_active, red_box, blue_box),
-        daemon=True
-    ).start()
+    page.add(main_content)

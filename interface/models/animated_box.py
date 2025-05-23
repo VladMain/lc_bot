@@ -1,7 +1,13 @@
+import threading
+
 from flet import Container, border, alignment, Page
 import time
 from math import pi
-from typing import Callable
+
+from utils.logger import get_logger
+
+
+log = get_logger()
 
 
 class AnimatedBox(Container):
@@ -18,12 +24,13 @@ class AnimatedBox(Container):
         )
 
 
-def animate_boxes(page: Page, is_active: Callable[[], bool], red_box: AnimatedBox, blue_box: AnimatedBox):
+def animate_boxes(page: Page, red_box: AnimatedBox, blue_box: AnimatedBox,
+                  stop_event: threading.Event = True):
     clock_wise_rotate = pi / 4
     counter_clock_wise_rotate = -pi * 2
 
     counter = 0
-    while is_active():
+    while not stop_event.is_set():
         try:
             if 0 <= counter <= 4:
                 red_box.rotate = counter_clock_wise_rotate
@@ -52,5 +59,5 @@ def animate_boxes(page: Page, is_active: Callable[[], bool], red_box: AnimatedBo
             if counter > 9:
                 counter = 0
         except Exception as e:
-            print(f"Animation stopped: {e}")
+            log.error(f"Animation stopped: {e}")
             break
